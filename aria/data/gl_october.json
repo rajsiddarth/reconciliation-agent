@@ -1,0 +1,122 @@
+{
+  "source": "General Ledger — Revenue Account 4000",
+  "period": "2026-10",
+  "exported_at": "2026-10-31T23:59:00Z",
+  "total_reported": 821500.00,
+  "entry_count": 11,
+  "note": "Raw export — not yet reconciled",
+  "entries": [
+    {
+      "entry_id": "GL-OCT-001",
+      "deal_ref": "D001",
+      "account_code": "4000",
+      "account_name": "Revenue — Software",
+      "amount": 45000.00,
+      "posting_date": "2026-10-03",
+      "description": "Revenue recognition — Acme Corp",
+      "posted_by": "finance-bot"
+    },
+    {
+      "entry_id": "GL-OCT-002",
+      "deal_ref": "D002",
+      "account_code": "4000",
+      "account_name": "Revenue — Software",
+      "amount": 22000.00,
+      "posting_date": "2026-10-05",
+      "description": "Revenue recognition — Brightwave Media",
+      "posted_by": "finance-bot"
+    },
+    {
+      "entry_id": "GL-OCT-003",
+      "deal_ref": "D003",
+      "account_code": "4100",
+      "account_name": "Revenue — Services",
+      "amount": 22000.00,
+      "posting_date": "2026-10-07",
+      "description": "Revenue recognition — Crestline Financial",
+      "posted_by": "ops-team",
+      "_note": "Manual entry — amount keyed incorrectly; CRM shows $25,000"
+    },
+    {
+      "entry_id": "GL-OCT-004",
+      "deal_ref": "D004",
+      "account_code": "4000",
+      "account_name": "Revenue — Software",
+      "amount": 98000.00,
+      "posting_date": "2026-10-09",
+      "description": "Revenue recognition — Deltaworks Inc",
+      "posted_by": "finance-bot"
+    },
+    {
+      "entry_id": "GL-OCT-005",
+      "deal_ref": "D005",
+      "account_code": "4000",
+      "account_name": "Revenue — Software",
+      "amount": 33500.00,
+      "posting_date": "2026-10-11",
+      "description": "Revenue recognition — Echo Dynamics",
+      "posted_by": "finance-bot"
+    },
+    {
+      "entry_id": "GL-OCT-006",
+      "deal_ref": "D006",
+      "account_code": "4000",
+      "account_name": "Revenue — Software",
+      "amount": 112000.00,
+      "posting_date": "2026-10-14",
+      "description": "Revenue recognition — Frontline Health",
+      "posted_by": "finance-bot"
+    },
+    {
+      "entry_id": "GL-OCT-007",
+      "deal_ref": "D007",
+      "account_code": "4000",
+      "account_name": "Revenue — Software",
+      "amount": 14750.00,
+      "posting_date": "2026-10-16",
+      "description": "Revenue recognition — Granite Systems",
+      "posted_by": "finance-bot"
+    },
+    {
+      "entry_id": "GL-OCT-008",
+      "deal_ref": "D008",
+      "account_code": "4000",
+      "account_name": "Revenue — Software",
+      "amount": 155000.00,
+      "posting_date": "2026-10-19",
+      "description": "Revenue recognition — Harbor Logistics",
+      "posted_by": "finance-bot"
+    },
+    {
+      "entry_id": "GL-OCT-010",
+      "deal_ref": "D010",
+      "account_code": "4000",
+      "account_name": "Revenue — Software",
+      "amount": 231250.00,
+      "posting_date": "2026-10-25",
+      "description": "Revenue recognition — Juniper Analytics",
+      "posted_by": "finance-bot"
+    },
+    {
+      "entry_id": "GL-OCT-011",
+      "deal_ref": "D011",
+      "account_code": "4000",
+      "account_name": "Revenue — Software",
+      "amount": 88000.00,
+      "posting_date": "2026-10-28",
+      "description": "Revenue recognition — Keystone Retail",
+      "posted_by": "finance-bot"
+    },
+    {
+      "entry_id": "GL-OCT-012",
+      "deal_ref": "D009",
+      "account_code": "4000",
+      "account_name": "Revenue — Software",
+      "amount": 0.00,
+      "posting_date": null,
+      "description": "PENDING — Ironclad Software deal not yet posted",
+      "posted_by": null,
+      "_note": "Entry placeholder; amount never updated after deal closed"
+    }
+  ]
+}

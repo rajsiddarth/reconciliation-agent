@@ -1,0 +1,131 @@
+{
+  "source": "Salesforce CRM Export",
+  "period": "2026-10",
+  "exported_at": "2026-10-31T23:59:00Z",
+  "total_reported": 847250.00,
+  "record_count": 12,
+  "note": "Raw export — not yet reconciled",
+  "records": [
+    {
+      "record_id": "CRM-2026-001",
+      "deal_id": "D001",
+      "customer": "Acme Corp",
+      "amount": 45000.00,
+      "close_date": "2026-10-03",
+      "sales_rep": "Sarah Chen",
+      "product": "Enterprise License",
+      "status": "Closed Won"
+    },
+    {
+      "record_id": "CRM-2026-002",
+      "deal_id": "D002",
+      "customer": "Brightwave Media",
+      "amount": 22000.00,
+      "close_date": "2026-10-05",
+      "sales_rep": "Marcus Webb",
+      "product": "Pro Subscription (Annual)",
+      "status": "Closed Won"
+    },
+    {
+      "record_id": "CRM-2026-003",
+      "deal_id": "D003",
+      "customer": "Crestline Financial",
+      "amount": 25000.00,
+      "close_date": "2026-10-07",
+      "sales_rep": "Sarah Chen",
+      "product": "Professional Services",
+      "status": "Closed Won"
+    },
+    {
+      "record_id": "CRM-2026-004",
+      "deal_id": "D004",
+      "customer": "Deltaworks Inc",
+      "amount": 98000.00,
+      "close_date": "2026-10-09",
+      "sales_rep": "Jordan Kim",
+      "product": "Enterprise License",
+      "status": "Closed Won"
+    },
+    {
+      "record_id": "CRM-2026-005",
+      "deal_id": "D005",
+      "customer": "Echo Dynamics",
+      "amount": 33500.00,
+      "close_date": "2026-10-11",
+      "sales_rep": "Marcus Webb",
+      "product": "Pro Subscription (Annual)",
+      "status": "Closed Won"
+    },
+    {
+      "record_id": "CRM-2026-006",
+      "deal_id": "D006",
+      "customer": "Frontline Health",
+      "amount": 112000.00,
+      "close_date": "2026-10-14",
+      "sales_rep": "Jordan Kim",
+      "product": "Enterprise License",
+      "status": "Closed Won"
+    },
+    {
+      "record_id": "CRM-2026-007",
+      "deal_id": "D007",
+      "customer": "Granite Systems",
+      "amount": 14750.00,
+      "close_date": "2026-10-16",
+      "sales_rep": "Sarah Chen",
+      "product": "Starter Plan (Annual)",
+      "status": "Closed Won"
+    },
+    {
+      "record_id": "CRM-2026-007B",
+      "deal_id": "D007",
+      "customer": "Granite Systems",
+      "amount": 14750.00,
+      "close_date": "2026-10-16",
+      "sales_rep": "Sarah Chen",
+      "product": "Starter Plan (Annual)",
+      "status": "Closed Won",
+      "_note": "Duplicate entry — same deal re-imported on 2026-10-17"
+    },
+    {
+      "record_id": "CRM-2026-008",
+      "deal_id": "D008",
+      "customer": "Harbor Logistics",
+      "amount": 155000.00,
+      "close_date": "2026-10-19",
+      "sales_rep": "Jordan Kim",
+      "product": "Enterprise License",
+      "status": "Closed Won"
+    },
+    {
+      "record_id": "CRM-2026-009",
+      "deal_id": "D009",
+      "customer": "Ironclad Software",
+      "amount": 8000.00,
+      "close_date": "2026-10-22",
+      "sales_rep": "Marcus Webb",
+      "product": "Starter Plan (Annual)",
+      "status": "Closed Won"
+    },
+    {
+      "record_id": "CRM-2026-010",
+      "deal_id": "D010",
+      "customer": "Juniper Analytics",
+      "amount": 231250.00,
+      "close_date": "2026-10-25",
+      "sales_rep": "Sarah Chen",
+      "product": "Enterprise License + Support",
+      "status": "Closed Won"
+    },
+    {
+      "record_id": "CRM-2026-011",
+      "deal_id": "D011",
+      "customer": "Keystone Retail",
+      "amount": 88000.00,
+      "close_date": "2026-10-28",
+      "sales_rep": "Jordan Kim",
+      "product": "Enterprise License",
+      "status": "Closed Won"
+    }
+  ]
+}

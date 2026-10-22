@@ -23,7 +23,7 @@ Three bugs are hidden in the data. Aria must find all of them through tool calls
 - **`@beta_tool` decorator** — define tools as typed Python functions; the SDK generates schemas automatically
 - **Tool Runner** — `client.beta.messages.tool_runner(...)` manages the agentic loop; no hand-written `while` loop required
 - **Parallel tool calls** — Aria may call `query_crm` and `query_gl` simultaneously in one turn
-- **Python permission gate** — write tools are injected only after a deterministic validator accepts the plan; this is ordinary code, not an API feature
+- **Two-gate permission pattern** — write access is gated twice: Gate 1 validates the plan; Gate 2 independently re-verifies the corrections Claude actually posted
 - **Adaptive thinking** — Sonnet 5.5 reasons through ambiguous cases without extra configuration
 - **Audit trail** — every correction references the source record that justified it
 
@@ -66,25 +66,44 @@ python run.py
 
 ---
 
-## How the Gate Works
+## Architecture
+
+![Aria Reconciliation Flow](docs/aria-architecture.svg)
+
+## How the Two-Gate Pattern Works
 
 ```
-Phase 1 (read-only tools)
+Phase 1 — Read-only tools
   Aria calls: get_summary → compare_sources → query_crm/query_gl → submit_plan()
-                                                                         │
-                                                              Python validator checks:
-                                                              ✓ All required fields present
-                                                              ✓ Totals match source data
-                                                              ✓ All 3 root-cause deals addressed
-                                                              ✓ Amounts explain the full $25,750 delta
-                                                                         │
-                                                              ✗ fail → Aria gets feedback, revises, resubmits
-                                                              ✓ pass → write tools injected
-Phase 2 (write tools unlocked)
-  Aria calls: post_correction() × N → write_report()
+                                                                          │
+                                                               Gate 1 — Plan Validator
+                                                               ✓ Required fields present
+                                                               ✓ Totals match source data
+                                                               ✓ All 3 deals addressed (D007, D009, D003)
+                                                               ✓ Amounts explain the full $25,750 delta
+                                                                          │
+                                                               ✗ fail → feedback sent, Aria revises
+                                                               ✓ pass → post_correction injected
+
+Phase 2a — Corrections (post_correction only)
+  Aria calls: post_correction() × N   [write_report not yet available]
+                                                                          │
+                                                               Gate 2 — Independent Check
+                                                               ✓ GL adjustments sum to expected $11,000
+                                                               ✓ Each correction has evidence reference
+                                                               ✓ No duplicate corrections
+                                                               ✓ All deal IDs are valid
+                                                                          │
+                                                               ✗ fail → remaining gap sent, Aria retries
+                                                               ✓ pass → write_report injected
+
+Phase 2b — Report (write_report only)
+  Aria calls: write_report()
 ```
 
-The gate is a plain Python function in [`aria/validator.py`](aria/validator.py). No API feature is responsible for enforcing it — the orchestrator in [`aria/agent.py`](aria/agent.py) simply does not include write tools in the Phase 1 tool list.
+Both gates are plain Python functions in [`aria/validator.py`](aria/validator.py). No API feature enforces them — the orchestrator in [`aria/agent.py`](aria/agent.py) controls the tool list at each phase.
+
+**Why two gates?** Gate 1 checks the *plan* Claude describes. Gate 2 re-verifies the *corrections Claude actually posted* — independently, without relying on Claude's own summary of what it did.
 
 ---
 

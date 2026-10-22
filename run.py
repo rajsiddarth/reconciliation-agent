@@ -35,8 +35,10 @@ def main() -> None:
     print(f"     {len(state.pending_plan['discrepancies'])} discrepancies · "
           f"${state.pending_plan['net_adjustment']:,.2f} net GL adjustment\n")
 
-    # ── Phase 2: apply corrections and write report ───────────────────────
+    # ── Phases 2a → Gate 2 → 2b ──────────────────────────────────────────
     run_write_phase()
+
+    print("\n  ✓  Independent check passed.")
 
     if state.report_path:
         print(f"\n  Report written → {state.report_path}")

@@ -1,18 +1,24 @@
 """
 Aria — core orchestrator.
 
-Runs the two-phase agentic loop:
+Runs the three-phase agentic loop:
 
   Phase 1  Investigation with read-only tools.
            Aria calls get_summary, compare_sources, query_crm, query_gl, and
-           submit_plan. submit_plan is the gate: it validates the plan with
+           submit_plan. submit_plan is Gate 1: it validates the plan with
            plain Python before signalling that write access is granted.
 
-  Gate     Python validates the CorrectionPlan before any writes happen.
-           This is deterministic code, not an API feature.
+  Gate 1   Python validates the CorrectionPlan before any writes happen.
 
-  Phase 2  Write phase with post_correction and write_report.
-           These tools are injected only after the gate passes.
+  Phase 2a Corrections phase: only post_correction is available.
+           Aria applies each correction identified in the plan.
+
+  Gate 2   Python independently re-verifies the corrections without relying
+           on Claude's description of what it posted. If verification fails,
+           Aria is given the remaining difference and retries (up to 3×).
+
+  Phase 2b Report phase: write_report is injected only after Gate 2 passes.
+           Aria writes the human-readable audit report.
 """
 
 import json
@@ -23,7 +29,7 @@ from anthropic import beta_tool
 from aria import state
 from aria.tools.read_tools import query_crm, query_gl, get_summary, compare_sources
 from aria.tools.write_tools import post_correction, write_report
-from aria.validator import validate_plan
+from aria.validator import validate_plan, independent_check
 
 client = anthropic.Anthropic()
 
@@ -55,20 +61,54 @@ RULES
 - If the validator rejects your plan, read the feedback, investigate further, and resubmit.
 """
 
-_WRITE_PROMPT_TEMPLATE = """\
-Your correction plan has been validated and write access is now granted.
+_CORRECTIONS_PROMPT_TEMPLATE = """\
+Your correction plan has been validated and post_correction is now available.
 
 APPROVED PLAN
 -------------
 {plan_json}
 
-TASKS
------
-1. Call post_correction() for each discrepancy that requires a ledger adjustment.
-   Use the evidence field to reference the specific source record.
-2. Call write_report() with a summary, the true revenue figure, and structured findings.
+TASK
+----
+Call post_correction() for each discrepancy that requires a ledger adjustment.
+Use the evidence field to reference the specific source record (e.g. 'GL-OCT-012').
 
-Apply all corrections before writing the report.
+Apply all corrections. Do not call write_report — that tool is not yet available.
+"""
+
+_CORRECTIONS_RETRY_TEMPLATE = """\
+The independent check found issues with the corrections you applied:
+
+ERRORS
+------
+{feedback}
+
+CORRECTIONS ALREADY POSTED (now cleared)
+-----------------------------------------
+{corrections}
+
+Call post_correction() again with corrected values.
+Trace each amount back to its source record before calling.
+"""
+
+_REPORT_PROMPT_TEMPLATE = """\
+All corrections have been independently verified and write_report is now available.
+
+VERIFICATION RESULT
+-------------------
+{check_message}
+
+CORRECTIONS APPLIED
+-------------------
+{corrections_json}
+
+TASK
+----
+Call write_report() once with:
+  - summary: 2–4 sentence executive summary
+  - true_revenue: the reconciled October revenue (CRM after duplicate removal = GL after adjustments)
+  - findings: one entry per deal (deal_id, issue, impact, resolution)
+  - corrections_count: number of corrections applied
 """
 
 
@@ -105,7 +145,7 @@ def submit_plan(
         return (
             f"✓ Plan validated. {result['message']}\n\n"
             "Your investigation is complete. The Python orchestrator will now "
-            "hand control to the write phase. Do not make further tool calls."
+            "hand control to the corrections phase. Do not make further tool calls."
         )
     else:
         return (
@@ -132,17 +172,77 @@ def run_investigation() -> bool:
 
 
 def run_write_phase() -> None:
-    """Phase 2: apply corrections and write the report using the validated plan."""
-    _header("Phase 2 — Applying Corrections")
+    """Phases 2a → Gate 2 → 2b.
 
-    prompt = _WRITE_PROMPT_TEMPLATE.format(
-        plan_json=json.dumps(state.pending_plan, indent=2)
+    2a: apply corrections (post_correction only)
+    Gate 2: Python re-verifies corrections independently
+    2b: write report (write_report injected only after Gate 2 passes)
+    """
+    _run_corrections()
+
+
+def _run_corrections(feedback: str = "", attempt: int = 1) -> None:
+    """Phase 2a: apply corrections. Calls Gate 2 on completion."""
+    _header(f"Phase 2a — Applying Corrections (attempt {attempt}/3)")
+
+    if feedback:
+        state.corrections_applied.clear()
+        prompt = _CORRECTIONS_RETRY_TEMPLATE.format(
+            feedback=feedback,
+            corrections=json.dumps(state.corrections_applied, indent=2),
+        )
+        max_tokens = 16_000
+    else:
+        prompt = _CORRECTIONS_PROMPT_TEMPLATE.format(
+            plan_json=json.dumps(state.pending_plan, indent=2)
+        )
+        max_tokens = 8_000
+
+    runner = client.beta.messages.tool_runner(
+        model="claude-sonnet-5-5",
+        max_tokens=max_tokens,
+        tools=[post_correction],
+        messages=[{"role": "user", "content": prompt}],
+    )
+
+    for message in runner:
+        _display(message)
+
+    _gate2(attempt)
+
+
+def _gate2(attempt: int) -> None:
+    """Gate 2: independent check. Unlocks write_report on pass; retries corrections on fail."""
+    _header("Gate 2 — Independent Check")
+
+    result = independent_check(state.corrections_applied)
+
+    if result["passed"]:
+        print(f"  ✓  {result['message']}\n")
+        state.check_passed = True
+        _run_report(result["message"])
+    elif attempt < 3:
+        print(f"  ✗  Independent check failed: {result['message']}")
+        print(f"     Sending remaining difference to Aria — retry {attempt + 1}/3\n")
+        _run_corrections(feedback=result["message"], attempt=attempt + 1)
+    else:
+        print(f"  ✗  Independent check failed after {attempt} attempts. Stopping.\n")
+        sys.exit(1)
+
+
+def _run_report(check_message: str) -> None:
+    """Phase 2b: write the audit report. write_report is injected only after Gate 2 passes."""
+    _header("Phase 2b — Writing Report")
+
+    prompt = _REPORT_PROMPT_TEMPLATE.format(
+        check_message=check_message,
+        corrections_json=json.dumps(state.corrections_applied, indent=2),
     )
 
     runner = client.beta.messages.tool_runner(
         model="claude-sonnet-5-5",
         max_tokens=8_000,
-        tools=[post_correction, write_report],
+        tools=[write_report],
         messages=[{"role": "user", "content": prompt}],
     )
 

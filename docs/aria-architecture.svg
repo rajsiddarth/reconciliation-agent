@@ -1,0 +1,131 @@
+<svg width="880" height="560" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="7" markerHeight="7" orient="auto">
+      <polygon points="0 0 10 3.5 0 7" fill="#6B7280"/>
+    </marker>
+    <marker id="ah-g" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="7" markerHeight="7" orient="auto">
+      <polygon points="0 0 10 3.5 0 7" fill="#16A34A"/>
+    </marker>
+    <marker id="ah-v" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="7" markerHeight="7" orient="auto">
+      <polygon points="0 0 10 3.5 0 7" fill="#7C3AED"/>
+    </marker>
+  </defs>
+
+  <!-- Page background -->
+  <rect width="880" height="560" fill="#F8FAFC" rx="12"/>
+
+  <!-- Title -->
+  <text x="440" y="28" text-anchor="middle" font-size="15" font-weight="700" fill="#0F172A">Aria Reconciliation Flow · Claude Sonnet 5.5</text>
+  <text x="440" y="44" text-anchor="middle" font-size="10" fill="#64748B">Python gates write access and independently verifies corrections. Claude never sees the full tool list at once.</text>
+
+  <!-- ── LEFT PANEL ──────────────────────────────────────────────────────────── -->
+  <rect x="8" y="52" width="426" height="500" rx="8" fill="#F0FDF9" stroke="#5EEAD4" stroke-width="1.5"/>
+  <text x="221" y="70" text-anchor="middle" font-size="12" font-weight="600" fill="#0F766E">Visible to Claude</text>
+  <text x="221" y="84" text-anchor="middle" font-size="10" fill="#64748B">Read-only until Gate 1 passes · write_report hidden until Gate 2 passes</text>
+
+  <!-- CLAUDE BOX -->
+  <rect x="108" y="92" width="218" height="58" rx="8" fill="#CCFBF1" stroke="#0D9488" stroke-width="2"/>
+  <text x="217" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#134E4A">✦  Claude Sonnet 5.5</text>
+  <text x="217" y="128" text-anchor="middle" font-size="10" fill="#0F766E">One append-only conversation</text>
+  <text x="217" y="142" text-anchor="middle" font-size="10" fill="#0F766E">Tool list changes mid-stream</text>
+
+  <!-- READ TOOLS BOX -->
+  <rect x="18" y="162" width="408" height="158" rx="8" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1.5"/>
+  <text x="36" y="182" font-size="11" font-weight="600" fill="#374151">Phase 1 — Read-only tools</text>
+
+  <!-- submit_plan gate row -->
+  <rect x="28" y="190" width="388" height="40" rx="6" fill="#ECFDF5" stroke="#6EE7B7" stroke-width="1"/>
+  <text x="40" y="207" font-size="10" fill="#065F46" font-family="ui-monospace,Consolas,monospace">submit_plan()   ← gate tool</text>
+  <text x="40" y="222" font-size="10" fill="#047857">Submits plan for Python validation; triggers Gate 1</text>
+
+  <!-- 4 tool badges 2×2 -->
+  <rect x="28" y="239" width="188" height="28" rx="5" fill="#F1F5F9"/>
+  <text x="40" y="257" font-size="10" fill="#1E293B" font-family="ui-monospace,Consolas,monospace">query_crm()</text>
+  <rect x="228" y="239" width="188" height="28" rx="5" fill="#F1F5F9"/>
+  <text x="240" y="257" font-size="10" fill="#1E293B" font-family="ui-monospace,Consolas,monospace">query_gl()</text>
+  <rect x="28" y="275" width="188" height="28" rx="5" fill="#F1F5F9"/>
+  <text x="40" y="293" font-size="10" fill="#1E293B" font-family="ui-monospace,Consolas,monospace">get_summary()</text>
+  <rect x="228" y="275" width="188" height="28" rx="5" fill="#F1F5F9"/>
+  <text x="240" y="293" font-size="10" fill="#1E293B" font-family="ui-monospace,Consolas,monospace">compare_sources()</text>
+
+  <!-- WRITE TOOLS BOX (dashed = deferred) -->
+  <rect x="18" y="332" width="408" height="208" rx="8" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="36" y="352" font-size="11" font-weight="600" fill="#374151">Deferred write tools</text>
+  <text x="36" y="366" font-size="10" fill="#9CA3AF">Injected by Python only after the required gate passes</text>
+
+  <!-- post_correction (unlocked after Gate 1) -->
+  <rect x="28" y="376" width="388" height="50" rx="6" fill="#ECFDF5" stroke="#6EE7B7" stroke-width="1.5"/>
+  <text x="46" y="393" font-size="10" fill="#065F46" font-family="ui-monospace,Consolas,monospace">&#x1F513; post_correction()     unlocked after Gate 1</text>
+  <text x="46" y="411" font-size="10" fill="#047857">Logs each correction &#x2192; output/corrections.json</text>
+
+  <!-- write_report (locked until Gate 2) -->
+  <rect x="28" y="436" width="388" height="50" rx="6" fill="#FEF3C7" stroke="#FCD34D" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <text x="46" y="453" font-size="10" fill="#78350F" font-family="ui-monospace,Consolas,monospace">&#x1F512; write_report()         unlocked after Gate 2</text>
+  <text x="46" y="471" font-size="10" fill="#92400E">Writes audit report &#x2192; output/aria_report.md</text>
+
+  <!-- ── RIGHT PANEL ─────────────────────────────────────────────────────────── -->
+  <rect x="444" y="52" width="428" height="500" rx="8" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+  <text x="658" y="70" text-anchor="middle" font-size="12" font-weight="600" fill="#1D4ED8">Controlled by Python</text>
+  <text x="658" y="84" text-anchor="middle" font-size="10" fill="#64748B">Validates plans, manages tool injection, independently verifies writes</text>
+
+  <!-- GATE 1: PLAN VALIDATOR -->
+  <rect x="454" y="92" width="408" height="148" rx="8" fill="#F0FDF4" stroke="#22C55E" stroke-width="2"/>
+  <text x="658" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#14532D">&#x1F6E1;  Gate 1 — Plan Validator</text>
+  <text x="658" y="127" text-anchor="middle" font-size="10" fill="#166534">Validates the plan before injecting post_correction</text>
+  <line x1="454" y1="136" x2="862" y2="136" stroke="#BBF7D0" stroke-width="1"/>
+  <text x="470" y="153" font-size="10" fill="#15803D">&#x2713;  All required fields present (type, deal_id, amount, evidence …)</text>
+  <text x="470" y="170" font-size="10" fill="#15803D">&#x2713;  Reported totals match source: CRM $847,250 · GL $821,500</text>
+  <text x="470" y="187" font-size="10" fill="#15803D">&#x2713;  All 3 root-cause deals addressed: D007, D009, D003</text>
+  <text x="470" y="204" font-size="10" fill="#15803D">&#x2713;  Discrepancy amounts explain the full $25,750 delta</text>
+  <text x="470" y="222" font-size="10" fill="#166534" font-weight="600">Pass &#x2192; post_correction injected into Claude's tool list</text>
+
+  <!-- GATE 2: INDEPENDENT CHECK -->
+  <rect x="454" y="252" width="408" height="170" rx="8" fill="#FFF7ED" stroke="#F97316" stroke-width="2"/>
+  <text x="658" y="272" text-anchor="middle" font-size="12" font-weight="700" fill="#7C2D12">&#x1F50D;  Gate 2 — Independent Check</text>
+  <text x="658" y="287" text-anchor="middle" font-size="10" fill="#9A3412">Python re-verifies corrections independently of Claude</text>
+  <line x1="454" y1="296" x2="862" y2="296" stroke="#FDBA74" stroke-width="1"/>
+  <text x="470" y="313" font-size="10" fill="#C2410C">&#x2713;  GL adjustments sum to expected net ($11,000)</text>
+  <text x="470" y="330" font-size="10" fill="#C2410C">&#x2713;  Each correction has a valid source evidence reference</text>
+  <text x="470" y="347" font-size="10" fill="#C2410C">&#x2713;  No duplicate corrections (same deal_id + correction_type)</text>
+  <text x="470" y="364" font-size="10" fill="#C2410C">&#x2713;  All deal IDs exist in the known dataset</text>
+  <line x1="454" y1="376" x2="862" y2="376" stroke="#FDBA74" stroke-width="1"/>
+  <text x="470" y="393" font-size="10" fill="#16A34A" font-weight="600">&#x2713; Pass &#x2192; write_report injected into Claude's tool list</text>
+  <text x="470" y="410" font-size="10" fill="#DC2626" font-weight="600">&#x2717; Fail &#x2192; remaining gap sent to Claude; retries at higher effort</text>
+
+  <!-- OUTPUT BOX -->
+  <rect x="454" y="436" width="408" height="104" rx="8" fill="#F5F3FF" stroke="#A78BFA" stroke-width="1.5"/>
+  <text x="658" y="456" text-anchor="middle" font-size="11" font-weight="600" fill="#4C1D95">Output Files</text>
+  <line x1="454" y1="463" x2="862" y2="463" stroke="#DDD6FE" stroke-width="1"/>
+  <text x="554" y="484" text-anchor="middle" font-size="10" fill="#5B21B6" font-family="ui-monospace,Consolas,monospace">corrections.json</text>
+  <text x="658" y="484" text-anchor="middle" font-size="13" fill="#C4B5FD">|</text>
+  <text x="762" y="484" text-anchor="middle" font-size="10" fill="#5B21B6" font-family="ui-monospace,Consolas,monospace">aria_report.md</text>
+  <text x="554" y="502" text-anchor="middle" font-size="9" fill="#7C3AED">machine-readable log</text>
+  <text x="762" y="502" text-anchor="middle" font-size="9" fill="#7C3AED">human-readable audit</text>
+  <text x="658" y="526" text-anchor="middle" font-size="9" fill="#9CA3AF">written to output/ on first run</text>
+
+  <!-- ── ARROWS ─────────────────────────────────────────────────────────────── -->
+
+  <!-- Arrow 1: submit_plan → Gate 1 -->
+  <path d="M 426 210 C 440 210 440 165 454 165" fill="none" stroke="#6B7280" stroke-width="1.5" marker-end="url(#ah)"/>
+  <text x="434" y="192" text-anchor="end" font-size="9" fill="#374151">submit_plan()</text>
+
+  <!-- Arrow 2: Gate 1 pass → post_correction unlock (dashed green) -->
+  <path d="M 454 224 Q 436 224 436 401 L 426 401" fill="none" stroke="#16A34A" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ah-g)"/>
+  <text x="432" y="314" text-anchor="end" font-size="9" fill="#16A34A">approval</text>
+  <text x="432" y="327" text-anchor="end" font-size="9" fill="#16A34A">+ unlock</text>
+
+  <!-- Arrow 3: post_correction → Gate 2 -->
+  <path d="M 426 401 C 440 401 440 336 454 336" fill="none" stroke="#6B7280" stroke-width="1.5" marker-end="url(#ah)"/>
+  <text x="434" y="375" text-anchor="end" font-size="9" fill="#374151">writes</text>
+
+  <!-- Arrow 4: Gate 2 pass → write_report unlock (dashed green) -->
+  <path d="M 454 394 Q 436 394 436 461 L 426 461" fill="none" stroke="#16A34A" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ah-g)"/>
+  <text x="432" y="428" text-anchor="end" font-size="9" fill="#16A34A">pass &#x2192;</text>
+  <text x="432" y="441" text-anchor="end" font-size="9" fill="#16A34A">unlock</text>
+
+  <!-- Arrow 5: Gate 2 → Output (down) -->
+  <line x1="658" y1="422" x2="658" y2="434" stroke="#7C3AED" stroke-width="1.5" marker-end="url(#ah-v)"/>
+
+  <!-- Footer -->
+  <text x="440" y="548" text-anchor="middle" font-size="9" fill="#94A3B8">github.com/rajsiddarth/reconciliation-agent</text>
+</svg>

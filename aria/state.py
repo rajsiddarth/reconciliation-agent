@@ -16,3 +16,6 @@ corrections_applied: list[dict] = []
 
 # Set by write_report() when the audit report is written.
 report_path: str | None = None
+
+# Flipped to True once the independent check (Gate 2) passes.
+check_passed: bool = False
